@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Siswa</title>
+  <link rel="stylesheet" href="Tugas1.css">
+</head>
+<body>
+  <form action="#" method="post" name="data_siswa">
+    <table>
+      <tr>
+        <td colspan="3" class="judul">Data Siswa</td>
+      </tr>
+
+      <tr>
+        <td class="label">Nama Lengkap</td>
+        <td colspan="2" class="gabung">
+          <input type="text" name="nama_lengkap" maxlength="40">
+        </td>
+      </tr>
+
+      <tr>
+        <td class="label">Nama Panggilan</td>
+        <td colspan="2" class="gabung">
+          <input type="text" name="nama_panggilan" maxlength="20">
+        </td>
+      </tr>
+
+      <tr>
+        <td class="label">Agama</td>
+        <td colspan="2" class="gabung">
+          <select name="agama">
+            <option selected>Katolik</option>
+            <option>Islam</option>
+            <option>Kristen</option>
+            <option>Hindu</option>
+            <option>Buddha</option>
+            <option>Konghucu</option>
+          </select>
+          <span class="tanya">?</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="label">Jenis Kelamin</td>
+        <td colspan="2" class="gabung">
+          <select name="jenis_kelamin">
+            <option selected>Laki-laki</option>
+            <option>Perempuan</option>
+          </select>
+          <span class="tanya">?</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="label">Alamat</td>
+        <td colspan="2">
+          <textarea name="kesan" placeholder="Jangan lupa isikan alamat anda di kotak ini !!!"></textarea>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3" class="simbol">&#9415;&#9415;&#9415;</td>
+      </tr>
+
+      <tr>
+        <td colspan="3" class="simbol">&#9400;&#9400;&#9400;</td>
+      </tr>
+
+      <tr>
+        <td class="label">Hobby</td>
+        <td colspan="2" class="opsi">
+          <input type="radio" name="hobby" value="membaca">Membaca
+          <input type="radio" name="hobby" value="menulis">Menulis
+          <input type="radio" name="hobby" value="menyanyi">Menyanyi
+        </td>
+      </tr>
+
+      <tr>
+        <td class="label">Makanan favorit</td>
+        <td colspan="2" class="opsi">
+          <input type="checkbox" name="makanan" value="soto">Soto
+          <input type="checkbox" name="makanan" value="bakso">Bakso
+          <input type="checkbox" name="makanan" value="nasi_goreng">Nasi Goreng
+        </td>
+      </tr>
+
+      <tr>
+        <td class="tombol-kiri">
+          <input type="submit" value="SUBMIT">
+        </td>
+        <td colspan="2" class="tombol-tengah">
+          <input type="reset" value="RESET">
+        </td>
+      </tr>
+    </table>
+  </form>
+</body>
+</html>

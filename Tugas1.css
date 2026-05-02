@@ -1,0 +1,93 @@
+body {
+  background: #f3efe8;
+  font-family: "Times New Roman", serif;
+  margin: 0;
+  padding: 6px;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 458px;
+  background: #f8f6f1;
+}
+
+td {
+  border: 1px solid #666;
+  padding: 4px;
+  font-size: 1px;
+  vertical-align: middle;
+}
+
+.judul {
+  font-size: 46px;
+  font-weight: bold;
+  text-align: center;
+  padding: 6px 0 8px;
+}
+
+.label {
+  width: 112px;
+  font-size: 19px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.gabung {
+  font-size: 16px;
+}
+
+.tanya {
+  margin-left: 12px;
+  font-size: 18px;
+}
+
+input[type="text"] {
+  width: 190px;
+  height: 22px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+select {
+  width: 92px;
+  height: 26px;
+  font-size: 16px;
+}
+
+textarea {
+  width: 100%;
+  height: 155px;
+  font-size: 16px;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.simbol {
+  text-align: center;
+  height: 50px;
+  font-size: 22px;
+  letter-spacing: 3px;
+}
+
+.opsi {
+  font-size: 16px;
+}
+
+.tombol-kiri {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.tombol-tengah {
+  text-align: center;
+}
+
+input[type="submit"],
+input[type="reset"] {
+  width: 64px;
+  height: 28px;
+  font-size: 13px;
+}
+
+
