@@ -34,20 +34,18 @@ class Pendaftaran(Siswa):
         return self.__biaya
 
     def tampilkan_data(self):
-        print("Nama: ", self.get_nama())
+        print("Nama Siswa: ", self.get_nama())
         print("NIS: ", self.get_nis())
         print("Kelas: ", self.get_kelas())
         print("Tanggal Pendaftaran: ", self.get_tanggal(), "/", self.get_bulan(), "/", self.get_tahun())
-        print("Biaya Pendaftaran: Rp.", self.get_biaya())
+        print("Biaya Pendaftaran: ", self.get_biaya())
 
 print("=== Pendaftaran Siswa Baru ===")
-
-nama = input("Masukkan Nama: ")
-nis = input("Masukkan NIS: ")
-
-tanggal = input("Masukkan Tanggal Pendaftaran (DD): ")
-bulan = input("Masukkan Bulan Pendaftaran (MM): ")
-tahun = input("Masukkan Tahun Pendaftaran (YYYY): ")
+nama = input("Nama Siswa: ")
+nis = input("NIS: ")
+tanggal = input("Tanggal Pendaftaran (DD): ")
+bulan = input("Bulan Pendaftaran (MM): ")
+tahun = input("Tahun Pendaftaran (YYYY): ")
 
 while True:
     print()
@@ -58,16 +56,16 @@ while True:
 
     if jenis == "1":
         kelas = "Regular"
-        biaya = 100000
+        biaya = "Rp.100.000"
         break
     elif jenis == "2":
         kelas = "Olimpiade"
-        biaya = 150000
+        biaya = "Rp.150.000"
         break
     else:
         print("Pilihan tidak valid! Silakan masukkan 1 atau 2.")
 
 pendaftaran = Pendaftaran(nama, nis, kelas, tanggal, bulan, tahun, biaya)
 
-print("\n=== Data Pendaftaran Siswa ===")
+print("\n=== Detail Data Pendaftaran Siswa ===")
 pendaftaran.tampilkan_data()
