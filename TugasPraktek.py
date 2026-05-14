@@ -34,18 +34,45 @@ class Pendaftaran(Siswa):
         return self.__biaya
 
     def tampilkan_data(self):
-        print("Nama Siswa: ", self.get_nama())
-        print("NIS: ", self.get_nis())
-        print("Kelas: ", self.get_kelas())
-        print("Tanggal Pendaftaran: ", self.get_tanggal(), "/", self.get_bulan(), "/", self.get_tahun())
-        print("Biaya Pendaftaran: ", self.get_biaya())
+        print("Nama Siswa:", self.get_nama())
+        print("NIS:", self.get_nis())
+        print("Kelas:", self.get_kelas())
+        print("Tanggal Pendaftaran:", f"{self.get_tanggal()}/{self.get_bulan()}/{self.get_tahun()}")
+        print("Biaya Pendaftaran:", self.get_biaya())
 
 print("=== Pendaftaran Siswa Baru ===")
-nama = input("Nama Siswa: ")
-nis = input("NIS: ")
-tanggal = input("Tanggal Pendaftaran (DD): ")
-bulan = input("Bulan Pendaftaran (MM): ")
-tahun = input("Tahun Pendaftaran (YYYY): ")
+
+while True:
+    nama = input("Nama Siswa: ")
+    if nama.strip():
+        break
+    print("Nama tidak boleh kosong.")
+
+while True:
+    nis = input("NIS: ")
+    if nis.strip():
+        break
+    print("NIS tidak boleh kosong.")
+
+while True:
+    tanggal = input("Tanggal Pendaftaran (DD): ")
+    if tanggal.isdigit() and 1 <= int(tanggal) <= 31:
+        tanggal = tanggal.zfill(2)
+        break
+    print("Masukkan tanggal antara 1 sampai 31.")
+
+while True:
+    bulan = input("Bulan Pendaftaran (MM): ")
+    if bulan.isdigit() and 1 <= int(bulan) <= 12:
+        bulan = bulan.zfill(2)
+        break
+    print("Masukkan bulan antara 1 sampai 12.")
+
+while True:
+    tahun = input("Tahun Pendaftaran (YYYY): ")
+    if tahun.isdigit() and len(tahun) == 4:
+        break
+    print("Masukkan tahun dengan 4 digit.")
 
 while True:
     print()
