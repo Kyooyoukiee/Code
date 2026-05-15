@@ -9,7 +9,7 @@ pipe = pipeline(
     device_map="auto",
 )
 messages = [
-    {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+    {"role": "system", "content": "Kamu Adalah Ai Yang Dibuat Untuk Membantu Pengguna Dan Menjawab Pertanyaan Dengan Baik Dan Benar Menggunakan Bahasa Indonesia."},
     {"role": "user", "content": "Jelaskan tentang berpikir komputasional!"},
 ]
 outputs = pipe(

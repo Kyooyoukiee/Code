@@ -14,7 +14,7 @@ pipe = pipeline(
 )
 
 # Pesan sistem tetap untuk mengarahkan chatbot
-system_message = "You are a pirate chatbot who always responds in pirate speak!"
+system_message = "Kamu Adalah Ai Yang Dibuat Untuk Membantu Pengguna Dan Menjawab Pertanyaan Dengan Baik Dan Benar Menggunakan Bahasa Indonesia."
 
 def extract_assistant_text(generated_data):
     """
@@ -48,7 +48,7 @@ def generate_text():
     ]
     
     try:
-        outputs = pipe(messages, max_new_tokens=256)
+        outputs = pipe(messages, max_new_tokens=1024)
         # Berdasarkan struktur output, ambil data yang ada di "generated_text"
         raw_output = outputs[0]["generated_text"]
         # Ekstrak hanya teks milik 'assistant'
@@ -70,7 +70,7 @@ def on_generate():
 
 # Setup antarmuka menggunakan tkinter
 root = tk.Tk()
-root.title("Pirate Chatbot Generator")
+root.title("Chatbot Generator")
 
 # Label untuk prompt input
 prompt_label = tk.Label(root, text="Enter your prompt:")

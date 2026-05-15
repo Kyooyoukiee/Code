@@ -10,7 +10,7 @@ pipe = pipeline(
 )
 
 # Pesan sistem yang tetap untuk mengarahkan chatbot agar selalu menggunakan bahasa bajak laut
-system_message = "You are a pirate chatbot who always responds in pirate speak!"
+system_message = "Kamu Adalah Ai Yang Dibuat Untuk Membantu Pengguna Dan Menjawab Pertanyaan Dengan Baik Dan Benar Menggunakan Bahasa Indonesia."
 
 while True:
     user_prompt = input("Enter your prompt (or type 'exit' to quit): ").strip()
