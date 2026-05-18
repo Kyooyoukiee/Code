@@ -4,59 +4,51 @@
 </head>
 <body bgcolor="#f3efe8">
   <style>
-    td{
-      font-family: "Times New Romans";
+    body {
+      font-family: "Times New Roman", serif;
     }
-    font{
-      font-family: "Times New Romans";
+    td {
+      padding: 2px;
     }
-    input{
-      font-family: "Times New Romans";
+    span {
+      margin-left: 12px;
+      font-size: 20px;
     }
-    select{
-      font-family: "Times New Romans";
+    input[type="text"] {
+      width: 190px;
+      height: 25px;
+      font-size: 18px;
     }
-    textarea{
-      font-family: "Times New Romans";
-    }
-    submit{
-      font-family: "Times New Romans";
-    }
-    reset{
-      font-family: "Times New Romans";
+    select {
+      width: 100px;
+      height: 26px;
+      font-size: 18px;
+      font-family: "Times New Roman", serif;
     }
   </style>
 
   <form action="#" method="post" name="data_siswa">
-    <table border="1" align="center" width="458" cellpadding="3" cellspacing="0" bgcolor="#f8f6f1">
+    <table border="1" align="center" width="458" cellspacing="2" bgcolor="#f8f6f1">
       <tr>
-        <td colspan="2" align="center">
-          <font face="Times New Romans" size="6"><b>Data Siswa</b></font>
-        </td>
+        <td colspan="2" align="center" style="font-size: 35px;"><b>Data Siswa</b></td>
       </tr>
 
       <tr>
-        <td width="112" nowrap>
-          <font face="Times New Romans" size="5">Nama Lengkap</font>
-        </td>
+        <td style="font-size: 20px;">Nama Lengkap</td>
         <td colspan="2">
-          <input type="text" name="nama_lengkap" size="36" maxlength="40">
+          <input type="text" name="nama_lengkap" size="20" maxlength="40" style="font-family: 'Times New Roman', serif;">
         </td>
       </tr>
 
       <tr>
-        <td nowrap>
-          <font face="Time New Romans" size="5">Nama Panggilan</font>
-        </td>
+        <td style="font-size: 20px;">Nama Panggilan</td>
         <td colspan="2">
-          <input type="text" name="nama_panggilan" size="36" maxlength="20">
+          <input type="text" name="nama_panggilan" size="20" maxlength="20" style="font-family: 'Times New Roman', serif;">
         </td>
       </tr>
 
       <tr>
-        <td nowrap>
-          <font face="Time New Romans" size="5">Agama</font>
-        </td>
+        <td style="font-size: 20px;">Agama</td>
         <td colspan="2">
           <select name="agama">
             <option selected>Katolik</option>
@@ -66,48 +58,42 @@
             <option>Buddha</option>
             <option>Konghucu</option>
           </select>
-          <font face="Time New Romans" size="4"> ?</font>
+          <span>?</span>
         </td>
       </tr>
 
       <tr>
-        <td nowrap>
-          <font face="Time New Romans" size="5">Jenis Kelamin</font>
-        </td>
+        <td style="font-size: 20px;">Jenis Kelamin</td>
         <td colspan="2">
           <select name="jenis_kelamin">
             <option selected>Laki-laki</option>
             <option>Perempuan</option>
           </select>
-          <font face="Time New Romans" size="4"> ?</font>
+          <span>?</span>
         </td>
       </tr>
 
       <tr>
-        <td valign="middle" nowrap>
-          <font face="Time New Romans" size="6">Alamat</font>
-        </td>
+        <td valign="middle" style="font-size: 26px;">Alamat</td>
         <td colspan="2">
-          <textarea name="alamat" rows="10" cols="40" placeholder="Jangan lupa isikan alamat anda dikotak ini !!!" style="resize: none"></textarea>
+          <textarea style="font-family: 'Times New Roman', serif; resize: none; font-size: 16px;" name="alamat" rows="8" cols="35" placeholder="Jangan lupa isikan alamat anda dikotak ini !!!"></textarea>
         </td>
       </tr>
 
       <tr>
         <td colspan="3" align="center" height="50">
-          <font face="Time New Romans" size="5">&#9415;&#9415;&#9415;</font>
+          <font size="5">&#9415;&#9415;&#9415;</font>
         </td>
       </tr>
 
       <tr>
         <td colspan="3" align="center" height="50">
-          <font face="Time New Romans" size="5">&#9400;&#9400;&#9400;</font>
+          <font size="5">&#9400;&#9400;&#9400;</font>
         </td>
       </tr>
 
       <tr>
-        <td nowrap>
-          <font face="Time New Romans" size="6">Hobby</font>
-        </td>
+        <td style="font-size: 20px;">Hobby</td>
         <td colspan="2">
           <input type="radio" name="hobby" value="membaca">Membaca
           <input type="radio" name="hobby" value="menulis">Menulis
@@ -116,9 +102,7 @@
       </tr>
 
       <tr>
-        <td nowrap>
-          <font face="Time New Romans" size="5">Makanan favorit</font>
-        </td>
+        <td style="font-size: 20px;">Makanan favorit</td>
         <td colspan="2">
           <input type="checkbox" name="makanan" value="soto">Soto
           <input type="checkbox" name="makanan" value="bakso">Bakso
