@@ -1,0 +1,148 @@
+#!/system/bin/sh
+
+rm -rf /sdcard/AozoraTuning.log
+
+setvalue() {
+    local file="$1"
+    local value="$2"
+
+    if [ -e "$file" ] && [ -w "$file" ]; then
+        current=$(cat "$file" 2>/dev/null)
+        if [ "$current" != "$value" ]; then
+            echo "$value" > "$file"
+        fi
+    fi
+}
+
+echo "Script is running!"
+
+{
+if [ -f "/proc/sys/kernel/sched_util_clamp_min_rt_default" ]; then
+    #UCLAMP
+    setvalue /proc/sys/kernel/sched_util_clamp_min_rt_default 64
+    setvalue /proc/sys/kernel/sched_util_clamp_min 72
+
+    # top-app 
+    setvalue /dev/cpuset/top-app/uclamp.max 100
+    setvalue /dev/cpuset/top-app/uclamp.min 20
+    setvalue /dev/cpuset/top-app/uclamp.boosted 1
+    setvalue /dev/cpuset/top-app/uclamp.latency_sensitive 1
+fi
+
+if [ -d "/dev/stune" ]; then
+    # top-app
+    setvalue /dev/stune/top-app/schedtune.boost 1
+    setvalue /dev/stune/top-app/schedtune.prefer_idle 1
+    setvalue /dev/stune/top-app/schedtune.colocate 1
+    setvalue /dev/stune/top-app/schedtune.sched_boost_no_override 1
+fi
+
+setvalue /proc/sys/vm/swappiness 90
+
+# I/O Scheduler
+optimize_io() {
+    # Optimize sd* devices
+    for device in /sys/block/sd*/queue; do
+        [ ! -d "$device" ] && continue
+        optimize_device "$device"
+    done
+
+    [ -d "/sys/block/mmcblk0/queue" ] && optimize_device "/sys/block/mmcblk0/queue"
+}
+
+optimize_device() {
+    local device="$1"
+    
+    params=("scheduler:zen" "read_ahead_kb:512" "nr_requests:256" "add_random:0" "nomerges:2" "rotational:0")
+
+    for param_pair in "${params[@]}"; do
+        param="${param_pair%:*}"
+        value="${param_pair#*:}"
+        param_file="$device/$param"
+        
+        [ -w "$param_file" ] && setvalue "$param_file" "$value"
+    done
+}
+
+optimize_io
+
+#Schedutil
+# CPU 0
+chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+setvalue /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1766400
+chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+setvalue /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+if [ -d "/sys/devices/system/cpu/cpu0/cpufreq/schedutil" ]; then
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_load 85
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 15000
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 35000
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/exp_util 0
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 0
+fi
+
+# CPU 4
+chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+setvalue /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2803200
+chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+
+chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+setvalue /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
+chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+
+if [ -d "/sys/devices/system/cpu/cpu4/cpufreq/schedutil" ]; then
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_load 85
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 25000
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 50000
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/exp_util 0
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
+fi
+
+# GPU
+setvalue /sys/class/kgsl/kgsl-3d0/throttling 0
+setvalue /sys/class/kgsl/kgsl-3d0/bus_split 0
+setvalue /sys/class/kgsl/kgsl-3d0/force_bus_on 0
+setvalue /sys/class/kgsl/kgsl-3d0/force_rail_on 0
+setvalue /sys/class/kgsl/kgsl-3d0/force_clk_on 0
+
+setvalue /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 0
+
+if [ -f "/sys/class/kgsl/kgsl-3d0/devfreq/available_frequencies" ]; then
+    FREQ_TABLE="/sys/class/kgsl/kgsl-3d0/devfreq/available_frequencies"
+
+    lowest_freq=$(tr ' ' '\n' < "$FREQ_TABLE" | grep -v '^$' | sort -n | head -1)
+
+    setvalue /sys/class/kgsl/kgsl-3d0/devfreq/min_freq "$lowest_freq"
+    setvalue /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 710000000
+fi
+
+if [ -f "/sys/kernel/gpu/gpu_freq_table" ]; then
+    FREQ_TABLE="/sys/kernel/gpu/gpu_freq_table"
+
+    lowest_freq=$(tr ' ' '\n' < "$FREQ_TABLE" | grep -v '^$' | sort -n | head -1)
+
+    setvalue /sys/kernel/gpu/gpu_min_clock "$lowest_freq"
+    setvalue /sys/kernel/gpu/gpu_max_clock 710
+fi
+
+# scheduler
+setvalue /proc/sys/kernel/sched_boost 0
+setvalue /proc/sys/kernel/sched_walt_rotate_big_tasks 1
+
+# Run 2 times to ensure the changes
+setvalue /proc/sys/kernel/sched_downmigrate 80
+setvalue /proc/sys/kernel/sched_group_downmigrate 85
+setvalue /proc/sys/kernel/sched_upmigrate 90
+setvalue /proc/sys/kernel/sched_group_upmigrate 95
+
+sleep 0.2
+
+setvalue /proc/sys/kernel/sched_downmigrate 80
+setvalue /proc/sys/kernel/sched_upmigrate 90
+setvalue /proc/sys/kernel/sched_group_downmigrate 85
+setvalue /proc/sys/kernel/sched_group_upmigrate 95
+
+} 2>&1 | tee -a /sdcard/AozoraTuning.log

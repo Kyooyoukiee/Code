@@ -1,0 +1,9 @@
+#!/system/bin/sh
+
+echo "Script is running!"
+
+find /data/user_de/*/*/*cache*/* -delete &>/dev/null
+
+sleep 0.2
+
+find /data/data/*/*cache*/* -delete &>/dev/null

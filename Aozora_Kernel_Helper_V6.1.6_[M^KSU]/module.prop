@@ -1,0 +1,5 @@
+id=aozora-helper
+name=Aozora Helper
+version=v6.1.6
+author=Kaiyaa77@yuu507
+description=Tune your kernel for better performance via terminal commands or new WebUI interface. Supported commands: su -c performance, su -c gaming, su -c gaming2, su -c balance, su -c powersave, su -c cachecleaner (clears app cache in /data/data and /data/user_de).

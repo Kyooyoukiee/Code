@@ -1,0 +1,14 @@
+debug.sf.treat_170m_as_sRGB=1
+debug.sf.enable_adpf_cpu_hint=true
+debug.adpf_cts_verbose_logging=false
+debug.adpf.use_report_actual_duration=false
+debug.sf.auto_latch_unsignaled=true
+debug.sf.latch_unsignaled=0
+debug.hwui.skia_tracing_enabled=false
+debug.performance.tuning=1
+video.accelerate.hw=1
+persist.sys.enable_low_latency_touch=1
+debug.hwui.target_cpu_time_percent=100
+debug.hwui.use_hint_manager=false
+persist.wm.debug.tracing=0
+debug.sf.disable_backpressure=1

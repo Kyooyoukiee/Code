@@ -1,0 +1,237 @@
+#!/system/bin/sh
+
+setvalue() {
+    local file="$1"
+    local value="$2"
+
+    if [ -e "$file" ] && [ -w "$file" ]; then
+        current=$(cat "$file" 2>/dev/null)
+        if [ "$current" != "$value" ]; then
+            echo "$value" > "$file"
+        fi
+    fi
+}
+
+setvalue /sys/class/power_supply/battery/input_suspend 0
+
+# I/O Scheduler
+optimize_io() {
+    # Optimize sd* devices
+    for device in /sys/block/sd*/queue; do
+        [ ! -d "$device" ] && continue
+        optimize_device "$device"
+    done
+
+    [ -d "/sys/block/mmcblk0/queue" ] && optimize_device "/sys/block/mmcblk0/queue"
+}
+
+optimize_device() {
+    local device="$1"
+    
+    params=("scheduler:zen" "read_ahead_kb:512" "nr_requests:256" "add_random:0" "nomerges:2" "rotational:0")
+
+    for param_pair in "${params[@]}"; do
+        param="${param_pair%:*}"
+        value="${param_pair#*:}"
+        param_file="$device/$param"
+        
+        [ -w "$param_file" ] && setvalue "$param_file" "$value"
+    done
+
+    chmod 644 "$device/iostats" 2>/dev/null
+    setvalue "$device/iostats" "0"
+    chmod 444 "$device/iostats" 2>/dev/null
+}
+
+optimize_io
+
+if [ -f "/proc/sys/kernel/sched_util_clamp_min_rt_default" ]; then
+    #UCLAMP
+    # Default system-wide
+    setvalue /proc/sys/kernel/sched_util_clamp_min_rt_default 96
+    setvalue /proc/sys/kernel/sched_util_clamp_min 128
+
+    # top-app 
+    setvalue /dev/cpuset/top-app/uclamp.max 100
+    setvalue /dev/cpuset/top-app/uclamp.min 32
+    setvalue /dev/cpuset/top-app/uclamp.boosted 1
+    setvalue /dev/cpuset/top-app/uclamp.latency_sensitive 1
+
+    # foreground 
+    setvalue /dev/cpuset/foreground/uclamp.max 90
+    setvalue /dev/cpuset/foreground/uclamp.min 8
+    setvalue /dev/cpuset/foreground/uclamp.boosted 0
+    setvalue /dev/cpuset/foreground/uclamp.latency_sensitive 1
+
+    # restricted
+    setvalue /dev/cpuset/restricted/uclamp.max 60
+    setvalue /dev/cpuset/restricted/uclamp.min 8
+    setvalue /dev/cpuset/restricted/uclamp.boosted 0
+    setvalue /dev/cpuset/restricted/uclamp.latency_sensitive 1
+
+    # background
+    setvalue /dev/cpuset/background/uclamp.max 32
+    setvalue /dev/cpuset/background/uclamp.min 4
+    setvalue /dev/cpuset/background/uclamp.boosted 0
+    setvalue /dev/cpuset/background/uclamp.latency_sensitive 0
+
+    # system-background
+    setvalue /dev/cpuset/system-background/uclamp.max 32
+    setvalue /dev/cpuset/system-background/uclamp.min 4
+    setvalue /dev/cpuset/system-background/uclamp.boosted 0
+    setvalue /dev/cpuset/system-background/uclamp.latency_sensitive 0
+
+    # foreground_window
+    setvalue /dev/cpuset/foreground_window/uclamp.max 90
+    setvalue /dev/cpuset/foreground_window/uclamp.min 16
+    setvalue /dev/cpuset/foreground_window/uclamp.boosted 0
+    setvalue /dev/cpuset/foreground_window/uclamp.latency_sensitive 1
+
+    # audio-app
+    setvalue /dev/cpuset/audio-app/uclamp.max 65
+    setvalue /dev/cpuset/audio-app/uclamp.min 8
+    setvalue /dev/cpuset/audio-app/uclamp.boosted 0
+    setvalue /dev/cpuset/audio-app/uclamp.latency_sensitive 1
+
+    # camera-daemon
+    setvalue /dev/cpuset/camera-daemon/uclamp.max 70
+    setvalue /dev/cpuset/camera-daemon/uclamp.min 8
+    setvalue /dev/cpuset/camera-daemon/uclamp.boosted 0
+    setvalue /dev/cpuset/camera-daemon/uclamp.latency_sensitive 1
+
+    # camera-background
+    setvalue /dev/cpuset/camera-background/uclamp.max 40
+    setvalue /dev/cpuset/camera-background/uclamp.min 8
+    setvalue /dev/cpuset/camera-background/uclamp.boosted 0
+    setvalue /dev/cpuset/camera-background/uclamp.latency_sensitive 0
+fi
+
+if [ -d "/dev/stune" ]; then
+    # Global
+    setvalue /dev/stune/schedtune.boost 0
+    setvalue /dev/stune/schedtune.prefer_idle 0
+    setvalue /dev/stune/schedtune.colocate 0
+
+    # top-app
+    setvalue /dev/stune/top-app/schedtune.boost 2
+    setvalue /dev/stune/top-app/schedtune.prefer_idle 1
+    setvalue /dev/stune/top-app/schedtune.colocate 1
+    setvalue /dev/stune/top-app/schedtune.sched_boost_no_override 1
+
+    # rt
+    setvalue /dev/stune/rt/schedtune.boost 0
+    setvalue /dev/stune/rt/schedtune.prefer_idle 1
+    setvalue /dev/stune/rt/schedtune.colocate 0
+
+    # foreground
+    setvalue /dev/stune/foreground/schedtune.boost 0
+    setvalue /dev/stune/foreground/schedtune.prefer_idle 1
+    setvalue /dev/stune/foreground/schedtune.colocate 0
+
+    # camera-daemon
+    setvalue /dev/stune/camera-daemon/schedtune.boost 0
+    setvalue /dev/stune/camera-daemon/schedtune.prefer_idle 0
+    setvalue /dev/stune/camera-daemon/schedtune.colocate 0
+
+    # background
+    setvalue /dev/stune/background/schedtune.boost 0
+    setvalue /dev/stune/background/schedtune.prefer_idle 0
+    setvalue /dev/stune/background/schedtune.colocate 0
+
+    # audio-app
+    setvalue /dev/stune/audio-app/schedtune.boost 0
+    setvalue /dev/stune/audio-app/schedtune.prefer_idle 0
+    setvalue /dev/stune/audio-app/schedtune.colocate 0
+fi
+
+
+setvalue /proc/sys/kernel/sched_boost 0
+setvalue /proc/sys/kernel/sched_child_runs_first 0
+
+# Schedutil
+# CPU 0
+chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+setvalue /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1766400
+chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+setvalue /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+if [ -d "/sys/devices/system/cpu/cpu0/cpufreq/schedutil" ]; then
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_load 90
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 10000
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 20000
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/exp_util 0
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 1
+    setvalue /sys/devices/system/cpu/cpu0/cpufreq/schedutil/pl 0
+fi
+
+# CPU 4
+chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+setvalue /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2803200
+chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+
+chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+setvalue /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
+chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+
+if [ -d "/sys/devices/system/cpu/cpu4/cpufreq/schedutil" ]; then
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_load 90
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 5000
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 22000
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/exp_util 0
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
+    setvalue /sys/devices/system/cpu/cpu4/cpufreq/schedutil/pl 0
+fi
+
+# GPU
+setvalue /sys/class/kgsl/kgsl-3d0/throttling 1
+setvalue /sys/class/kgsl/kgsl-3d0/bus_split 0
+setvalue /sys/class/kgsl/kgsl-3d0/force_bus_on 0
+setvalue /sys/class/kgsl/kgsl-3d0/force_rail_on 0
+setvalue /sys/class/kgsl/kgsl-3d0/force_clk_on 0
+
+# Memory
+setvalue /proc/sys/vm/min_free_kbytes 262144
+setvalue /proc/sys/vm/vfs_cache_pressure 50
+setvalue /proc/sys/vm/dirty_expire_centisecs 2500
+setvalue /proc/sys/vm/dirty_writeback_centisecs 400
+setvalue /proc/sys/vm/dirty_ratio 50
+setvalue /proc/sys/vm/dirty_background_ratio 20
+
+setvalue /proc/sys/vm/swappiness 90
+
+# OOM
+setvalue /proc/sys/vm/panic_on_oom 0
+setvalue /proc/sys/vm/oom_kill_allocating_task 1
+setvalue /proc/sys/vm/overcommit_memory 1
+setvalue /proc/sys/vm/overcommit_ratio 80
+
+setvalue /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 0
+
+if [ -f "/sys/class/kgsl/kgsl-3d0/devfreq/available_frequencies" ]; then
+    FREQ_TABLE="/sys/class/kgsl/kgsl-3d0/devfreq/available_frequencies"
+
+    lowest_freq=$(tr ' ' '\n' < "$FREQ_TABLE" | grep -v '^$' | sort -n | head -1)
+    second_highest_freq=$(tr ' ' '\n' < "$FREQ_TABLE" | grep -v '^$' | sort -n | tail -2 | head -1)
+    highest_freq=$(tr ' ' '\n' < "$FREQ_TABLE" | grep -v '^$' | sort -n | tail -1)
+
+    setvalue /sys/class/kgsl/kgsl-3d0/devfreq/min_freq "$lowest_freq"
+    setvalue /sys/class/kgsl/kgsl-3d0/devfreq/max_freq "$second_highest_freq"
+sleep 8
+    setvalue /sys/class/kgsl/kgsl-3d0/devfreq/max_freq "$highest_freq"
+fi
+
+if [ -f "/sys/kernel/gpu/gpu_freq_table" ]; then
+    FREQ_TABLE="/sys/kernel/gpu/gpu_freq_table"
+
+    lowest_freq=$(tr ' ' '\n' < "$FREQ_TABLE" | grep -v '^$' | sort -n | head -1)
+    highest_freq=$(tr ' ' '\n' < "$FREQ_TABLE" | grep -v '^$' | sort -n | tail -1)
+
+    setvalue /sys/kernel/gpu/gpu_min_clock "$lowest_freq"
+    setvalue /sys/kernel/gpu/gpu_max_clock "$highest_freq"
+fi
+
+setvalue /proc/sys/kernel/sched_boost 0
+setvalue /proc/sys/kernel/sched_walt_rotate_big_tasks 1

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kernel Profile Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="app-title">Aozora Helper</div>
+
+            <div class="tab-content active" id="homeContent">
+                <div class="dashboard-layout">
+                    <div class="hero-card">
+                        <h2 id="deviceModel" class="hero-title">Loading...</h2>
+                        <div class="hero-badge">Aozora Helper</div>
+                        <div class="hero-bg-shape"></div>
+                    </div>
+
+                    <div class="mini-cards-grid">
+                        <div class="mini-card">
+                            <h3 id="OS">Loading...</h3>
+                            <p>Build ID</p>
+                        </div>
+                        <div class="mini-card">
+                            <h3 id="rootManager">Loading...</h3>
+                            <p>Root implementation</p>
+                        </div>
+                    </div>
+
+                    <div class="system-details-card">
+                        <h3 class="card-title">System Details</h3>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Android</span>
+                                <span class="detail-value" id="androidVer">Loading...</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">SELinux</span>
+                                <span class="detail-value" id="selinuxStatus">Loading...</span>
+                            </div>
+                            
+                            <div class="detail-item full-width">
+                                <span class="detail-label">SOC</span>
+                                <span class="detail-value" id="SOC">Loading...</span>
+                            </div>
+                            
+                            <div class="detail-item full-width">
+                                <span class="detail-label">Ram</span>
+                                <span class="detail-value" id="ramCapacity">Loading...</span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <span class="detail-label">Kernel</span>
+                                <span class="detail-value" id="kernelName">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tuningContent">
+                <div id="log" class="log">Ready. Select profile to execute.</div>
+
+                <div class="profiles-grid">
+                    <div class="profile-card" data-profile="powersave">
+                        <span class="profile-icon material-symbols-outlined">battery_saver</span>
+                        <h3>Power Save</h3>
+                        <p>Max battery life</p>
+                        <div class="profile-status">Tap to activate</div>
+                    </div>
+                    <div class="profile-card" data-profile="balance">
+                        <span class="profile-icon material-symbols-outlined">balance</span>
+                        <h3>Balance</h3>
+                        <p>Balance performance</p>
+                        <div class="profile-status">Tap to activate</div>
+                    </div>
+                    <div class="profile-card" data-profile="gaming">
+                        <span class="profile-icon material-symbols-outlined">sports_esports</span>
+                        <h3>Gaming</h3>
+                        <p>Optimized for gaming</p>
+                        <div class="profile-status">Tap to activate</div>
+                    </div>
+                    <div class="profile-card" data-profile="gaming2">
+                        <span class="profile-icon material-symbols-outlined">rocket_launch</span>
+                        <h3>Gaming Pro</h3>
+                        <p>Extreme performance</p>
+                        <div class="profile-status">Tap to activate</div>
+                    </div>
+                    <div class="profile-card" data-profile="performance">
+                        <span class="profile-icon material-symbols-outlined">bolt</span>
+                        <h3>Performance</h3>
+                        <p>Max performance</p>
+                        <div class="profile-status">Tap to activate</div>
+                    </div>
+                    <div class="profile-card" data-profile="cachecleaner">
+                        <span class="profile-icon material-symbols-outlined">cleaning_services</span>
+                        <h3>Cache Cleaner</h3>
+                        <p>Clear app cache</p>
+                        <div class="profile-status">Tap to activate</div>
+                    </div>
+                </div>
+
+                <div class="bypass-control">
+                    <div class="bypass-header">
+                        <div class="bypass-icon material-symbols-outlined">electric_bolt</div>
+                        <h3>Bypass Charging</h3>
+                    </div>
+                    <div class="bypass-toggle">
+                        <div class="toggle-label" id="toggleLabel">Checking...</div>
+                        <div class="toggle-track" id="toggleTrack">
+                            <div class="toggle-thumb" id="toggleThumb"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-tab="home">
+                <span class="nav-icon material-symbols-outlined">home</span>
+                <span class="nav-label">Home</span>
+            </div>
+            <div class="nav-item" data-tab="tuning">
+                <span class="nav-icon material-symbols-outlined">settings</span>
+                <span class="nav-label">Tuning</span>
+            </div>
+        </nav>
+    </div>
+
+    <script type="module" src="assets/script.js"></script>
+</body>
+</html>
