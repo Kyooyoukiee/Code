@@ -16,7 +16,7 @@ class Mobil:
         print(f"Merk: {self.merk}")
         print(f"Kecepatan: {self.__kecepatan} km/h")
 
-mobil1 = Mobil("Toyota", 60)
+mobil1 = Mobil("Toyota", 70)
 
 print("Merk:", mobil1.merk)
 print("Kecepatan Sekarang:", mobil1.get_kecepatan())
