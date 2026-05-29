@@ -3,10 +3,11 @@ import pandas as pd
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
-df = pd.DataFrame({"hari_ke": [1,2,3,4,5], "jumlah_terjual": [8,10,12,14,16]})
+csv_path = "Database/penjualan_harian.csv"
+df = pd.read_csv(csv_path)
 
-X = df[["hari_ke"]].values.astype("float32")
-y = df["jumlah_terjual"].values.astype("float32")
+X = df[["Hari Ke"]].values.astype("float32")
+y = df["Jumlah Terjual"].values.astype("float32")
 
 model = Sequential([Dense(1, input_shape=(1,))])
 model.compile(optimizer="adam", loss="mse")
